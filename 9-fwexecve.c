@@ -6,6 +6,8 @@
 #include <string.h>
 #include <errno.h>
 
+void handlechild(int pid, char *arv, char **argv);
+
 /**
  * main - shell for fork + wait + execve
  * Return: int
@@ -24,16 +26,7 @@ int main(void)
 	{
 		if (pid2 == 0)
 		{
-			if (pid3 == 0)
-			{
-				execve(argv[0], argv, NULL);
-				sleep(2);
-			}
-			else
-			{
-				execve(argv[0], argv, NULL);
-				sleep(2);
-			}
+			handlechild(pid3, argv[0], argv);
 		}
 		else
 		{
@@ -79,4 +72,25 @@ int main(void)
 		;
 
 	return (0);
+}
+
+/**
+ * handlechild - handles the child process
+ * @pid: process id
+ * @arg: file to executue
+ * @argv: list of arguments
+ */
+
+void handlechild(int pid, char *arg, char **argv)
+{
+	if (pid == 0)
+	{
+		execve(arg, argv, NULL);
+		sleep(2);
+	}
+	else
+	{
+		execve(arg, argv, NULL);
+		sleep(2);
+	}
 }
