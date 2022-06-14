@@ -1,42 +1,28 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#include "main.h"
 
-int main(void)
+/**
+ * main - starts the simple shell programme
+ * @ac: num of param (unused)
+ * @av: arr of command list argument
+ * Return: Always 0.
+ */
+
+int main(__attribute__((unused)) int ac, char **av)
 {
-	int i, j;
-        char *token, *buffer, **argv;
-        const char s[2] = " ";
-        size_t len = 1024;
+	char *cmd_line;
+	size_t size;
+	int cmd_count;
 
-        buffer = malloc(sizeof(size_t) * len);
-	argv = malloc(sizeof(char *) * (4 + 1));
+	cmd_count = 0;
+	signal(SIGINT, SIG_IGN);
 
-        while (1)
-        {
-                printf("$ ");
-                i = getline(&buffer, &len, stdin);
-                if (i != EOF)
-                        printf("%s", buffer);
+	do {
+		cmd_count++;
+		cmd_line = NULL;
+		size = 0;
+		process_line(line, size, command_counter, av);
 
-                token = strtok(buffer, s);
-		j = 0;
+	} while (1);
 
-                while (token)
-                {
-                        argv[j] = strdup(token);
-			j++;
-                        token = strtok(NULL, s);
-		}
-		argv[j] = NULL;
-		if (execve(argv[0], argv, NULL) == -1)
-		{
-			perror("Error:");
-		}
-        }
-
-
-        return (0);
-
+	return (0);
 }
