@@ -84,3 +84,28 @@ int count_token(char *cmd_line, const char *delim)
 	free(str);
 	return (i);
 }
+
+/**
+ * path_token - makes paths as an array of strings contining the path dir
+ * @index: Index of the path in the environment variables
+ * @str: string to separate
+ * Return: array of pointer to strings
+ */
+
+char **path_token(int index, char *str)
+{
+	int len, token_len;
+	const char *delim = ":\n";
+	char **path_tokens, *e_var;
+
+	len = _strlen(str);
+	token_len = 0;
+	/*Moving the pointer len of str plus = sign*/
+	e_var = environ[index] + (len + 1);
+	path_tokens = get_token(e_var, delim, token_len);
+
+	if (path_tokens == NULL)
+		return (NULL);
+
+	return (path_tokens);
+}

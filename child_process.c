@@ -19,16 +19,16 @@ void create_pid(char **arrs, char *line, int count, char **av)
 	if (pid == 0)
 	{
 		tmp_cmd = arrs[0];
-		cmd = path_finder(arrs[0]);
+		cmd = gets_path(arrs[0]);
 		if (cmd == NULL)
 		{
 			/*checking for file in current directory*/
 			check = stat(tmp_cmd, &buffer);
 			if (check == -1)
 			{
-				error_printing(av[0], count, tmp_cmd);
+				p_error(av[0], count, tmp_cmd);
 				print_str(": not found", 0);
-				single_free(2, line, tmp_cmd);
+				_free_single(2, line, tmp_cmd);
 				for (i = 1; arrs[i]; i++)
 					free(arrs[i]);
 				free(arrs);
@@ -37,8 +37,8 @@ void create_pid(char **arrs, char *line, int count, char **av)
 			/*file exist in cwd or has full path*/
 			cmd = tmp_cmd;
 		}
-		param_array[0] = cmd;
-		if (param_array[0] != NULL)
+		arrs[0] = cmd;
+		if (arrs[0] != NULL)
 		{
 			if (execve(arrs[0], arrs, environ) == -1)
 				exec_error(av[0], count, tmp_cmd);

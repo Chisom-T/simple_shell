@@ -13,18 +13,18 @@ void process_line(char *cmd_line, size_t size, int cmd_count, char **av)
 {
 	int i, token_len;
 	ssize_t line_len;
-	char **param_array, *entry[] = "my_shell-$";
+	char **param_array, entry[] = "my_shell-$ ";
 	const char *delim = "\n\t ";
 
 	token_len = 0;
-	write(STDOUT_FILENO, entry, str_len(entry));
-	line_len = getline(&line, &size, stdin);
+	write(STDOUT_FILENO, entry, _strlen(entry));
+	line_len = getline(&cmd_line, &size, stdin);
 	if (line_len != -1)
 	{
 		param_array = get_token(cmd_line, delim, token_len);
 		if (param_array[0] == NULL)
 		{
-			single_free(2, param_array, cmd_line);
+			_free_single(2, param_array, cmd_line);
 			return;
 		}
 		i = built_in(param_array, cmd_line);
@@ -32,7 +32,7 @@ void process_line(char *cmd_line, size_t size, int cmd_count, char **av)
 			create_pid(param_array, cmd_line, cmd_count, av);
 		for (i = 0; param_array[i] != NULL; i++)
 			free(param_array[i]);
-		single_free(2, param_array, cmd_line);
+		_free_single(2, param_array, cmd_line);
 	}
 	else
 		exit_b(cmd_line);

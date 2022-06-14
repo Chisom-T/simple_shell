@@ -20,7 +20,7 @@ int main(__attribute__((unused)) int ac, char **av)
 		cmd_count++;
 		cmd_line = NULL;
 		size = 0;
-		process_line(line, size, command_counter, av);
+		process_line(cmd_line, size, cmd_count, av);
 
 	} while (1);
 
