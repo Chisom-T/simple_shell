@@ -34,7 +34,7 @@ void _free_double(char **mem)
 
 /**
  * _free_single - Will free a pointers to a string.
- * @n: The number of pointers to free.
+ * @p: The number of pointers to free.
  */
 
 void _free_single(int p, ...)
@@ -74,7 +74,7 @@ void p_error(char *av, int count, char *cmd)
  * exec_error - Prints exec errors.
  * @av: The name of the program running the shell.
  * @count: Keeps track of how many commands have been entered.
- * @tmp_command: The command that filed.
+ * @tmp_cmd: The command that filed.
  */
 
 void exec_error(char *av, int count, char *tmp_cmd)

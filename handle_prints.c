@@ -74,6 +74,7 @@ char *_strdup(char *src)
 /**
  * print_str - Prints a string character by character to STDOUT
  * @str: param
+ * @new_line: param
  */
 
 void print_str(char *str, int new_line)

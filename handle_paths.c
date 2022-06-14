@@ -2,8 +2,8 @@
 
 /**
  * search_dir - Looks through dir stored in token_path for a specific file
- * @path_tokens: pointer to array of strings for paths contained in PATH env var
- * @command: Represents a command. like ls, echo, pwd, /bin/ls etc.
+ * @path_tokens: pointer to arr of strings for paths contained in PATH env var
+ * @cmd: Represents a command. like ls, echo, pwd, /bin/ls etc.
  * Return: string with the upper most directory containing the command file
  */
 
@@ -46,7 +46,7 @@ char *search_dir(char **path_tokens, char *cmd)
 }
 
 /**
- * build_path - Combines two strings one for path dir and other for command file
+ * build_path - Combines two strs one for path dir and other for command file
  * @dir: Represents a directory in the path
  * @cmd: Represents a file in a directory of the path
  * Return: string representing the full path of a command

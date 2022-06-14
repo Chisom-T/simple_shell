@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * parse_line - Processes the cmd line with argumements
+ * process_line - Processes the cmd line with argumements
  * Also frees memory that is not longer needed
  * @cmd_line: param pointer to a string
  * @size: A holder for numbers of size_t. Will always be initilized to 0.

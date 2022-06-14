@@ -1,14 +1,14 @@
 #include "main.h"
 
 /**
- * create_child - Create child process to execute another program
+ * create_pid - Create child process to execute another program
  * @arrs: Arr of pointers to strings
  * @cmd_line: contents of the readline func
  * @count: counter keeping track of how many cmds have been entered
  * @av: Name of the program running the shell
  */
 
-void create_pid(char **arrs, char *line, int count, char **av)
+void create_pid(char **arrs, char *cmd_line, int count, char **av)
 {
 	pid_t pid;
 	int status, i, check;
@@ -28,7 +28,7 @@ void create_pid(char **arrs, char *line, int count, char **av)
 			{
 				p_error(av[0], count, tmp_cmd);
 				print_str(": not found", 0);
-				_free_single(2, line, tmp_cmd);
+				_free_single(2, cmd_line, tmp_cmd);
 				for (i = 1; arrs[i]; i++)
 					free(arrs[i]);
 				free(arrs);

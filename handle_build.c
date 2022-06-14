@@ -8,7 +8,7 @@
 
 void cd_b(char *cmd_line)
 {
-	int i,token_len;
+	int i, token_len;
 	char **p_arrs;
 	const char *delim = "\n\t ";
 
@@ -51,7 +51,7 @@ void env_b(__attribute__((unused))char *cmd_line)
 
 /**
  * exit_b - Exits the shell. After freeing allocated resources.
- * @line: A string representing the input from the user.
+ * @cmd_line: A string representing the input from the user.
  */
 
 void exit_b(char *cmd_line)
@@ -64,7 +64,7 @@ void exit_b(char *cmd_line)
 /**
  * check_builtins - Finds the right function needed for execution.
  * @str: The name of the function that is needed.
- * Return: Upon sucess a pointer to a void function. Otherwise NULL.
+ * Return: function pointer
  */
 
 void (*check_builtins(char *str))(char *str)
@@ -90,9 +90,9 @@ void (*check_builtins(char *str))(char *str)
 
 /**
  * built_in - Checks for builtin functions.
- * @command: An array of all the arguments passed to the shell.
- * @line: A string representing the input from the user.
- * Return: If function is found 0. Otherwise -1.
+ * @cmd: An array of all the arguments passed to the shell.
+ * @cmd_line: A string representing the input from the user.
+ * Return: int
  */
 
 int built_in(char **cmd, char *cmd_line)
