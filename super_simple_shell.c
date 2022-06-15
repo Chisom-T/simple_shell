@@ -34,7 +34,7 @@ void set_data(shell_d *d_sh, char **av)
 
 	d_sh->av = av;
 	d_sh->input = NULL;
-	d_sh->args = NULL;
+	d_sh->tokens = NULL;
 	d_sh->status = 0;
 	d_sh->counter = 1;
 
@@ -65,8 +65,8 @@ void start_shell(shell_d *d_sh)
 	j = 1;
 	while (j == 1)
 	{
-		write(STDIN_FILENO, "Turf-$ ", 4);
-		input = read_line(&i_eof);
+		write(STDIN_FILENO, "Turf-$ ", 7);
+		input = get_line(&i_eof);
 		if (i_eof != -1)
 		{
 			input = rm_comment(input);

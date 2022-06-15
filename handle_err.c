@@ -30,7 +30,7 @@ int get_err(shell_d *d_sh, int eval)
 		break;
 	}
 
-	if (error)
+	if (err)
 	{
 		write(STDERR_FILENO, err, _strlen(err));
 		free(err);
@@ -57,7 +57,7 @@ char *strcat_cd(shell_d *d_sh, char *msg, char *err, char *ver_str)
 	_strcat(err, ": ");
 	_strcat(err, ver_str);
 	_strcat(err, ": ");
-	_strcat(err, d_sh->args[0]);
+	_strcat(err, d_sh->tokens[0]);
 	_strcat(err, msg);
 	if (d_sh->tokens[1][0] == '-')
 	{
@@ -70,7 +70,7 @@ char *strcat_cd(shell_d *d_sh, char *msg, char *err, char *ver_str)
 	}
 	else
 	{
-		_strcat(err, datash->tokens[1]);
+		_strcat(err, d_sh->tokens[1]);
 	}
 
 	_strcat(err, "\n");
@@ -114,7 +114,7 @@ char *get_cd_err(shell_d *d_sh)
 
 	free(ver_str);
 
-	return (error);
+	return (err);
 }
 
 /**
@@ -131,8 +131,8 @@ char *error404(shell_d *d_sh)
 
 	ver_str = aux_itoa(d_sh->counter);
 	len = _strlen(d_sh->av[0]) + _strlen(ver_str);
-	len += _strlen(d_sh->args[0]) + 16;
-	error = malloc(sizeof(char) * (len + 1));
+	len += _strlen(d_sh->tokens[0]) + 16;
+	err = malloc(sizeof(char) * (len + 1));
 
 	if (err == 0)
 	{
@@ -166,7 +166,7 @@ char *exit_error(shell_d *d_sh)
 
 	ver_str = aux_itoa(d_sh->counter);
 	len = _strlen(d_sh->av[0]) + _strlen(ver_str);
-	len += _strlen(d_sh->args[0]) + _strlen(d_sh->tokens[1]) + 23;
+	len += _strlen(d_sh->tokens[0]) + _strlen(d_sh->tokens[1]) + 23;
 	err = malloc(sizeof(char) * (len + 1));
 	if (err == 0)
 	{

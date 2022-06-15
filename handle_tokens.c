@@ -85,7 +85,7 @@ char *swap_char(char *input, int bool)
 		}
 	}
 	return (input);
-y}
+}
 
 /**
  * add_nodes - add separators and command lines in the lists
@@ -193,7 +193,7 @@ int split_commands(shell_d *d_sh, char *input)
 		i = exec_line(d_sh);
 		free(d_sh->tokens);
 
-		if (loop == 0)
+		if (i == 0)
 			break;
 
 		go_next(&list_s, &list_l, d_sh);

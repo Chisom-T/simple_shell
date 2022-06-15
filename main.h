@@ -65,6 +65,33 @@ typedef struct line_list_s
 	struct line_list_s *next;
 } line_list;
 
+/**
+ * struct r_var_list - single linked list
+ * @len_var: length of the variable
+ * @val: value of the variable
+ * @len_val: length of the value
+ * @next: next node
+ * Description: single linked list to store variables
+ */
+typedef struct r_var_list
+{
+	int len_var;
+	char *val;
+	int len_val;
+	struct r_var_list *next;
+} r_var;
+
+/**
+ * struct builtin_s - Builtin struct for command args.
+ * @name: The name of the command builtin i.e cd, exit, env
+ * @f: data type pointer function.
+ */
+typedef struct builtin_s
+{
+	char *name;
+	int (*f)(shell_d *d_sh);
+} builtin_t;
+
 void free_data(shell_d *d_sh);
 void set_data(shell_d *d_sh, char **av);
 void start_shell(shell_d *d_sh);
@@ -83,7 +110,7 @@ char *get_cd_err(shell_d *d_sh);
 char *error404(shell_d *d_sh);
 char *exit_error(shell_d *d_sh);
 char *env_err(shell_d *d_sh);
-char *error_path_126(shell_d *d_sh);
+char *path_126_err(shell_d *d_sh);
 int repeated_char(char *input, int i);
 int error_sep_op(char *input, int i, char last);
 int first_char(char *input, int *i);
@@ -102,28 +129,49 @@ void check_env(r_var **h, char *in, shell_d *data);
 int check_vars(r_var **h, char *in, char *st, shell_d *data);
 char *replaced_input(r_var **head, char *input, char *new_input, int nlen);
 char *rep_var(char *input, shell_d *d_sh);
-
-/**
- * struct built_in - Defines the builtins functions.
- * @b_name: The name of the build in command.
- * @func: A pointer to the right builtin function.
- */
-typedef struct built_in
-{
-	char *b_name;
-	void (*func)(char *);
-} builtin_f;
-
-void cd_b(char *cmd_line);
-void env_b(__attribute__((unused))char *cmd_line);
-void (*check_builtins(char *str))(char *str);
-void exit_b(char *line);
-int built_in(char **cmd, char *cmd_line);
-int _putchar(char c);
-int print_num(int n);
+char *_strcat(char *dest, const char *src);
+char *_strcpy(char *dest, char *src);
 int _strcmp(char *s1, char *s2);
-char *_strdup(char *src);
-void print_str(char *str, int new_line);
-
+char *_strchr(char *s, char c);
+void get_sigint(int sig);
+int _strspn(char *s, char *accept);
+void rev_string(char *s);
+char *_strdup(const char *s);
+int cmp_chars(char str[], const char *delim);
+int _strlen(const char *s);
+int _isdigit(const char *s);
+char *_strtok(char str[], const char *delim);
+char **_reallocdp(char **ptr, unsigned int old_size, unsigned int new_size);
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+void _memcpy(void *newptr, const void *ptr, unsigned int size);
+int is_cdir(char *path, int *i);
+int exec_line(shell_d *d_sh);
+char *_which(char *cmd, char **_environ);
+int is_executable(shell_d *d_sh);
+int check_error_cmd(char *dir, shell_d *d_sh);
+int cmd_exec(shell_d *d_sh);
+int cmp_env_name(const char *nenv, const char *name);
+int _env(shell_d *d_sh);
+char *copy_info(char *name, char *value);
+char *_getenv(const char *name, char **_environ);
+int _setenv(shell_d *d_sh);
+void set_env(char *name, char *value, shell_d *d_sh);
+int _unsetenv(shell_d *datash);
+void cd_to_home(shell_d *datash);
+void cd_previous(shell_d *datash);
+void cd_to(shell_d *datash);
+void cd_dot(shell_d *datash);
+int cd_shell(shell_d *datash);
+void free_line_list(line_list **head);
+line_list *add_line_node_end(line_list **head, char *line);
+void free_sep_list(sep_list **head);
+sep_list *add_sep_node_end(sep_list **head, char sep);
+void free_rvar_list(r_var **head);
+int get_len(int n);
+char *aux_itoa(int n);
+int _atoi(char *s);
+r_var *add_rvar_node(r_var **head, int lvar, char *val, int lval);
+int exit_shell(shell_d *d_sh);
+int (*get_builtin(char *cmd))(shell_d *);
 
 #endif

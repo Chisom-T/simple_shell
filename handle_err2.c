@@ -51,7 +51,7 @@ char *path_126_err(shell_d *d_sh)
 	err = malloc(sizeof(char) * (len + 1));
 	if (err == 0)
 	{
-		free(error);
+		free(err);
 		free(ver_str);
 		return (NULL);
 	}

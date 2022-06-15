@@ -102,3 +102,25 @@ void assignto_line(char **cmd_line, size_t *n, char *buffer, size_t j)
 		free(buffer);
 	}
 }
+
+
+/**
+ * exec_line - finds builtins and commands
+ * @datash: data relevant (args)
+ * Return: 1 on success.
+ */
+
+int exec_line(shell_d *d_sh)
+{
+	int (*builtin)(shell_d *d_sh);
+
+	if (d_sh->tokens[0] == NULL)
+		return (1);
+
+	builtin = get_builtin(d_sh->tokens[0]);
+
+	if (builtin != NULL)
+		return (builtin(d_sh));
+
+	return (cmd_exec(d_sh));
+}
