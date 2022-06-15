@@ -6,7 +6,7 @@
  * Return: error message.
  */
 
-char *env_err(d_shell *d_sh)
+char *env_err(shell_d *d_sh)
 {
 	int len;
 	char *err, *ver_str, *msg;
@@ -40,7 +40,7 @@ char *env_err(d_shell *d_sh)
  * Return: The error string.
  */
 
-char *path_126_err(d_shell *d_sh)
+char *path_126_err(shell_d *d_sh)
 {
 	int len;
 	char *ver_str, *err;

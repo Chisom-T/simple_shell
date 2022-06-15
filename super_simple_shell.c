@@ -132,7 +132,7 @@ char *rm_comment(char *input)
  * @d_sh: param
  */
 
-void free_data(data_shell *d_sh)
+void free_data(shell_d *d_sh)
 {
 	unsigned int i;
 

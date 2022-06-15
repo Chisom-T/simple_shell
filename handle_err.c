@@ -7,26 +7,26 @@
  * Return: error
  */
 
-int get_err(d_shell *d_sh, int eval)
+int get_err(shell_d *d_sh, int eval)
 {
 	char *err;
 
 	switch (eval)
 	{
 	case -1:
-		err = error_env(d_sh);
+		err = env_err(d_sh);
 		break;
 	case 126:
-		err = error_path_126(datash);
+		err = path_126_err(d_sh);
 		break;
 	case 127:
-		err = error_not_found(datash);
+		err = error404(d_sh);
 		break;
 	case 2:
-		if (_strcmp("exit", d_sh->args[0]) == 0)
-			error = error_exit_shell(d_sh);
-		else if (_strcmp("cd", d_sh->args[0]) == 0)
-			err = error_get_cd(d_sh);
+		if (_strcmp("exit", d_sh->tokens[0]) == 0)
+			err = exit_error(d_sh);
+		else if (_strcmp("cd", d_sh->tokens[0]) == 0)
+			err = get_cd_err(d_sh);
 		break;
 	}
 
@@ -49,7 +49,7 @@ int get_err(d_shell *d_sh, int eval)
  * Return: error message
  */
 
-char *strcat_cd(d_shell *d_sh, char *msg, char *err, char *ver_str)
+char *strcat_cd(shell_d *d_sh, char *msg, char *err, char *ver_str)
 {
 	char *illegal_flag;
 
@@ -65,7 +65,7 @@ char *strcat_cd(d_shell *d_sh, char *msg, char *err, char *ver_str)
 		illegal_flag[0] = '-';
 		illegal_flag[1] = d_sh->tokens[1][1];
 		illegal_flag[2] = '\0';
-		_strcat(error, illegal_flag);
+		_strcat(err, illegal_flag);
 		free(illegal_flag);
 	}
 	else
@@ -83,13 +83,13 @@ char *strcat_cd(d_shell *d_sh, char *msg, char *err, char *ver_str)
  * @d_sh: data relevant (directory)
  * Return: Error message
  */
-char *get_cd_err(d_shell *d_sh)
+char *get_cd_err(shell_d *d_sh)
 {
 	int len, len_id;
 	char *err, *ver_str, *msg;
 
 	ver_str = aux_itoa(d_sh->counter);
-	if (d_sh->token[1][0] == '-')
+	if (d_sh->tokens[1][0] == '-')
 	{
 		msg = ": Illegal option ";
 		len_id = 2;
@@ -97,7 +97,7 @@ char *get_cd_err(d_shell *d_sh)
 	else
 	{
 		msg = ": can't cd to ";
-		len_id = _strlen(d_sh->token[1]);
+		len_id = _strlen(d_sh->tokens[1]);
 	}
 
 	len = _strlen(d_sh->av[0]) + _strlen(d_sh->tokens[0]);
@@ -123,7 +123,7 @@ char *get_cd_err(d_shell *d_sh)
  * Return: Error message
  */
 
-char *error404(data_shell *d_sh)
+char *error404(shell_d *d_sh)
 {
 	int len;
 	char *err;
@@ -134,7 +134,7 @@ char *error404(data_shell *d_sh)
 	len += _strlen(d_sh->args[0]) + 16;
 	error = malloc(sizeof(char) * (len + 1));
 
-	if (error == 0)
+	if (err == 0)
 	{
 		free(err);
 		free(ver_str);
@@ -158,7 +158,7 @@ char *error404(data_shell *d_sh)
  * @d_sh: data relevant (counter, arguments)
  * Return: Error message
  */
-char *exit_error(d_shell *d_sh)
+char *exit_error(shell_d *d_sh)
 {
 	int len;
 	char *err;

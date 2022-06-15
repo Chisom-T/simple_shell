@@ -129,7 +129,7 @@ void add_nodes(sep_list **head_s, line_list **head_l, char *input)
  * @d_sh: data structure
  */
 
-void go_next(sep_list **list_s, line_list **list_l, d_shell *d_sh)
+void go_next(sep_list **list_s, line_list **list_l, shell_d *d_sh)
 {
 	int loop_sep;
 	sep_list *ls_s;
@@ -171,7 +171,7 @@ void go_next(sep_list **list_s, line_list **list_l, d_shell *d_sh)
  * Return: int
  */
 
-int split_commands(d_shell *d_sh, char *input)
+int split_commands(shell_d *d_sh, char *input)
 {
 
 	sep_list *head_s, *list_s;
