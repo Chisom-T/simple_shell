@@ -24,3 +24,26 @@ A simple UNIX command interpreter.
 - How to execute another program with the execve system call
 - How to suspend the execution of a process until one of its children terminates
 - What is EOF / “end-of-file”?
+
+
+# Turf-$
+
+## Synopsis
+This is a simple implementation of a UNIX command line interpreter for the ALX certification programme.
+
+## Description
+Turf-$ can interpret and execute command line arguments read from the standard input. It reads line by line from a file or the terminal line. It then interprets the lines and executes it if the line is a valid command.
+
+## Usage
+All the files are to be compiled on an Ubuntu 14.04 LTS machine with:
+```
+gcc -Wall -Werror -Wextra -pedantic *.c -o hsh
+```
+
+Once compiled, to start the program, run:
+```./hsh```
+
+To exit the program, run:
+```Turf-$ exit```
+
+The Turf-$ shell supports most shell commands, such as ```cat```, ```pwd```, ```ls -la``` and more.  
