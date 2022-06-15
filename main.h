@@ -34,6 +34,7 @@ extern char **environ;
  * @_environ: environment variable
  * @pid: process ID of the shell
  */
+
 typedef struct s_data
 {
 	char **av;
@@ -44,6 +45,44 @@ typedef struct s_data
 	char **_environ;
 	char *pid;
 } shell_d;
+
+/**
+ * struct sep_list_s - single linked list
+ * @separator: ; | &
+ * @next: next node
+ * Description: single linked list to store separators
+ */
+typedef struct sep_list_s
+{
+	char separator;
+	struct sep_list_s *next;
+} sep_list;
+
+/**
+ * struct line_list_s - single linked list
+ * @line: command line
+ * @next: next node
+ * Description: single linked list to store command lines
+ */
+typedef struct line_list_s
+{
+	char *line;
+	struct line_list_s *next;
+} line_list;
+
+
+void go_next(sep_list **list_s, line_list **list_l, d_shell *d_sh);
+int split_commands(d_shell *d_sh, char *input);
+void add_nodes(sep_list **head_s, line_list **head_l, char *input);
+char **get_token(char *input);
+char *swap_char(char *input, int bool);
+int get_err(d_shell *d_sh, int eval);
+char *strcat_cd(d_shell *d_sh, char *msg, char *err, char *ver_str);
+char *get_cd_err(d_shell *d_sh);
+char *error404(data_shell *d_sh);
+char *exit_error(d_shell *d_sh);
+char *env_err(d_shell *d_sh);
+char *error_path_126(d_shell *d_sh);
 
 
 /**

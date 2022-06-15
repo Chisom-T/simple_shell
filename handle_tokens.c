@@ -1,111 +1,211 @@
 #include "main.h"
 
 /**
- * get_token - handles token functions, and make them more accessible
- * @cmd_line: A string containing the raw user input.
- * @delim: A constant string containing the desired delimeter to tokenize line.
- * @token_len: A holder for the amount of tokens in a string.
- * Return: an array of tokens representing the command
+ * get_token - tokenizes the input string
+ * @input: input string.
+ * Return: string splitted.
  */
 
-char **get_token(char *cmd_line, const char *delim, int token_len)
+char **get_token(char *input)
 {
-	char **arrs;
+	size_t bsize;
+	size_t i;
+	char **tokens;
+	char *token;
 
-	token_len = count_token(cmd_line, delim);
-	if (token_len == -1)
+	bsize = TOK_BUFSIZE;
+	tokens = malloc(sizeof(char *) * (bsize));
+	if (tokens == NULL)
 	{
-		free(cmd_line);
-		return (NULL);
-	}
-	arrs = token_arr(token_len, cmd_line, delim);
-	if (arrs == NULL)
-	{
-		free(cmd_line);
-		return (NULL);
+		write(STDERR_FILENO, ": allocation error\n", 18);
+		exit(EXIT_FAILURE);
 	}
 
-	return (arrs);
+	token = _strtok(input, TOK_DELIM);
+	tokens[0] = token;
+
+	for (i = 1; token != NULL; i++)
+	{
+		if (i == bsize)
+		{
+			bsize += TOK_BUFSIZE;
+			tokens = _reallocdp(tokens, i, sizeof(char *) * bsize);
+			if (tokens == NULL)
+			{
+				write(STDERR_FILENO, ": allocation error\n", 18);
+				exit(EXIT_FAILURE);
+			}
+		}
+		token = _strtok(NULL, TOK_DELIM);
+		tokens[i] = token;
+	}
+
+	return (tokens);
 }
 
+
 /**
- * token_arr - Separates a cmd string into arrays of tokens
- * @token_len: An integer representing the amount of tokens in the array
- * @cmd_line: String that is separated by an specified delimeter
- * @delim: The desired delimeter to separate tokens.
- * Return: array of pointer to strings.
+ * swap_char - swaps | and & for non-printed chars
+ * @input: input string
+ * @bool: type of swap
+ * Return: swapped string
  */
 
-char **token_arr(int token_len, char *cmd_line, const char *delim)
+char *swap_char(char *input, int bool)
 {
 	int i;
-	char **buffer, *token, *line_cp;
 
-	line_cp = _strdup(cmd_line);
-	buffer = malloc(sizeof(char *) * (token_len + 1));
-
-	if (buffer == NULL)
-		return (NULL);
-
-	token = strtok(line_cp, delim);
-
-	for (i = 0; token != NULL; i++)
+	if (bool == 0)
 	{
-		buffer[i] = _strdup(token);
-		token = strtok(NULL, delim);
+		for (i = 0; input[i]; i++)
+		{
+			if (input[i] == '|')
+			{
+				if (input[i + 1] != '|')
+					input[i] = 16;
+				else
+					i++;
+			}
+
+			if (input[i] == '&')
+			{
+				if (input[i + 1] != '&')
+					input[i] = 12;
+				else
+					i++;
+			}
+		}
+	}
+	else
+	{
+		for (i = 0; input[i]; i++)
+		{
+			input[i] = (input[i] == 16 ? '|' : input[i]);
+			input[i] = (input[i] == 12 ? '&' : input[i]);
+		}
+	}
+	return (input);
+y}
+
+/**
+ * add_nodes - add separators and command lines in the lists
+ * @head_s: head of separator list
+ * @head_l: head of command lines list
+ * @input: input string
+ */
+
+void add_nodes(sep_list **head_s, line_list **head_l, char *input)
+{
+	int i;
+	char *line;
+
+	input = swap_char(input, 0);
+
+	for (i = 0; input[i]; i++)
+	{
+		if (input[i] == ';')
+			add_sep_node_end(head_s, input[i]);
+
+		if (input[i] == '|' || input[i] == '&')
+		{
+			add_sep_node_end(head_s, input[i]);
+			i++;
+		}
 	}
 
-	buffer[i] = NULL;
-	free(line_cp);
-	return (buffer);
+	line = _strtok(input, ";|&");
+	do {
+		line = swap_char(line, 1);
+		add_line_node_end(head_l, line);
+		line = _strtok(NULL, ";|&");
+	} while (line != NULL);
+
 }
 
 /**
- * count_token - Counts tokens in the passed string.
- * @cmd_line: String that is separated by an specified delimeter
- * @delim: The desired delimeter to separate tokens.
- * Return: Upon success the total count of the tokens. Otherwise -1.
+ * go_next - go to the next command line stored
+ * @list_s: separator list
+ * @list_l: command line list
+ * @d_sh: data structure
  */
 
-int count_token(char *cmd_line, const char *delim)
+void go_next(sep_list **list_s, line_list **list_l, d_shell *d_sh)
 {
-	char *str, *token;
+	int loop_sep;
+	sep_list *ls_s;
+	line_list *ls_l;
+
+	loop_sep = 1;
+	ls_s = *list_s;
+	ls_l = *list_l;
+
+	while (ls_s != NULL && loop_sep)
+	{
+		if (d_sh->status == 0)
+		{
+			if (ls_s->separator == '&' || ls_s->separator == ';')
+				loop_sep = 0;
+			if (ls_s->separator == '|')
+				ls_l = ls_l->next, ls_s = ls_s->next;
+		}
+		else
+		{
+			if (ls_s->separator == '|' || ls_s->separator == ';')
+				loop_sep = 0;
+			if (ls_s->separator == '&')
+				ls_l = ls_l->next, ls_s = ls_s->next;
+		}
+		if (ls_s != NULL && !loop_sep)
+			ls_s = ls_s->next;
+	}
+
+	*list_s = ls_s;
+	*list_l = ls_l;
+}
+
+/**
+ * split_commands - splits command lines according to
+ * the separators ;, | and &, and executes them
+ * @d_sh: param data structure
+ * @input: param input string
+ * Return: int
+ */
+
+int split_commands(d_shell *d_sh, char *input)
+{
+
+	sep_list *head_s, *list_s;
+	line_list *head_l, *list_l;
 	int i;
 
-	str = _strdup(cmd_line);
+	head_s = NULL;
+	head_l = NULL;
 
-	if (str == NULL)
-		return (-1);
-	token = strtok(str, delim);
+	add_nodes(&head_s, &head_l, input);
 
-	for (i = 0; token != NULL; i++)
-		token = strtok(NULL, delim);
+	list_s = head_s;
+	list_l = head_l;
 
-	free(str);
-	return (i);
-}
+	while (list_l != NULL)
+	{
+		d_sh->input = list_l->line;
+		d_sh->tokens = get_token(d_sh->input);
+		i = exec_line(d_sh);
+		free(d_sh->tokens);
 
-/**
- * path_token - makes paths as an array of strings contining the path dir
- * @index: Index of the path in the environment variables
- * @str: string to separate
- * Return: array of pointer to strings
- */
+		if (loop == 0)
+			break;
 
-char **path_token(int index, char *str)
-{
-	int len, token_len;
-	const char *delim = ":\n";
-	char **path_tokens, *e_var;
+		go_next(&list_s, &list_l, d_sh);
 
-	len = _strlen(str);
-	token_len = 0;
-	/*Moving the pointer len of str plus = sign*/
-	e_var = environ[index] + (len + 1);
-	path_tokens = get_token(e_var, delim, token_len);
+		if (list_l != NULL)
+			list_l = list_l->next;
+	}
 
-	if (path_tokens == NULL)
-		return (NULL);
+	free_sep_list(&head_s);
+	free_line_list(&head_l);
 
-	return (path_tokens);
+	if (i == 0)
+		return (0);
+	return (1);
 }
