@@ -106,7 +106,7 @@ void assignto_line(char **cmd_line, size_t *n, char *buffer, size_t j)
 
 /**
  * exec_line - finds builtins and commands
- * @datash: data relevant (args)
+ * @d_sh: data relevant (args)
  * Return: 1 on success.
  */
 
