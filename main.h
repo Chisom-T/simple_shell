@@ -1,36 +1,50 @@
 #ifndef _MAIN_
 #define _MAIN_
 
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <sys/types.h>
-#include <dirent.h>
 #include <sys/stat.h>
-#include <stdarg.h>
 #include <signal.h>
+#include <limits.h>
+#include <errno.h>
+#include <fcntl.h>
 
-void process_line(char *cmd_line, size_t size, int cmd_count, char **av);
-void create_pid(char **arrs, char *line, int count, char **av);
-char **get_token(char *cmd_line, const char *delim, int token_len);
-char **token_arr(int token_len, char *cmd_line, const char *delim);
-int count_token(char *cmd_line, const char *delim);
-char **path_token(int index, char *str);
-char *search_dir(char **path_tokens, char *cmd);
-char *build_path(char *dir, char *cmd);
-char *gets_path(char *cmd);
-int find_path(char *str);
-int _strlen(char *str);
-void _free_double(char **mem);
-void _free_single(int p, ...);
-void p_error(char *av, int count, char *cmd);
-void exec_error(char *av, int count, char *tmp_cmd);
-int print_num(int n);
+void free_data(shell_d *d_sh);
+void set_data(shell_d *d_sh, char **av);
+void start_shell(shell_d *d_sh);
+char *rm_comment(char *input);
+char *get_line(int *i_eof);
+ssize_t read_line(char **cmd_line, size_t *n, FILE *stream);
 
+#define BUFSIZE 1024
+#define TOK_BUFSIZE 128
+#define TOK_DELIM " \t\r\n\a"
 extern char **environ;
+
+/**
+ * struct s_data - struct that contains all relevant data on runtime
+ * @av: list of argument
+ * @input: cmd line inputs
+ * @tokens: tokens of each separeted cmd
+ * @status: last status of the shell
+ * @counter: lines counter
+ * @_environ: environment variable
+ * @pid: process ID of the shell
+ */
+typedef struct s_data
+{
+	char **av;
+	char *input;
+	char **tokens;
+	int status;
+	int counter;
+	char **_environ;
+	char *pid;
+} shell_d;
+
 
 /**
  * struct built_in - Defines the builtins functions.
